@@ -31,16 +31,6 @@ fd2015.select(max("count")).take(1)
 
 fd2015.groupBy("ORIGIN_COUNTRY_NAME").max("count").limit(5).collect()
 
-// TOP FIVE DESTINATION COUNTRIES.
-//ss.sql(
-//  """
-//    |SELECT DEST_COUNTRY_NAME, sum(COUNT) as dest_total
-//    |FROM flight_data_2015
-//    |GROUP BY DEST_COUNTRY_NAME
-//    |ORDER BY sum(COUNT) DESC
-//    |LIMIT 5
-//    |""".stripMargin).collect()
-
 val maxSql = ss.sql("SELECT DEST_COUNTRY_NAME, sum(count) as destination_total FROM flight_data_2015 GROUP BY DEST_COUNTRY_NAME ORDER BY sum(count) DESC LIMIT 5")
 
 maxSql.collect()
