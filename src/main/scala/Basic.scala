@@ -20,18 +20,36 @@ object Basic extends App {
   fd2015.sort("count").take(2)
 
 
-  println("Create View")
+  println("** CREATE FLIGHT DATA VIEW ** ")
   fd2015.createOrReplaceTempView("flight_data_2015")
 
   val fd_sql = spark.sql(
     """
-      SELECT DEST_COUNTRY_NAME, count(*)
+      SELECT DEST_COUNTRY_NAME, count(1)
       FROM flight_data_2015
       GROUP BY DEST_COUNTRY_NAME
       """)
 
+  val fd_df = fd2015.groupBy("DEST_COUNTRY_NAME").count()
+
+  println("SQL explanation: ", fd_sql.explain())
+  println("DF explanation: ", fd_df.explain())
+
+
   fd_sql.printSchema()
-  for (item <- fd_sql.take(10)) {
+  for (item <- fd_sql.take(100)) {
+    println(item)
+  }
+
+  val maxSql = spark.sql("""
+SELECT DEST_COUNTRY_NAME, sum(count) as destination_total
+FROM flight_data_2015
+GROUP BY DEST_COUNTRY_NAME
+ORDER BY sum(count) DESC
+LIMIT 5
+""")
+
+  for (item <- maxSql.collect()) {
     println(item)
   }
 }
