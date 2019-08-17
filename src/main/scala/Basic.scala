@@ -1,4 +1,7 @@
+
 import org.apache.spark.sql.{Row, SparkSession}
+
+import scala.io.Source
 
 object Basic extends App {
 
@@ -7,11 +10,13 @@ object Basic extends App {
     .master("local[4]")
     .getOrCreate()
 
+
   val fd2015 = spark
     .read
     .option("inferSchema", "true")
     .option("header", "true")
-    .csv("/Users/anup.sethuram/DEV/MGIT/de-spark/src/resources/2015-summary.csv")
+    .csv("src/resources/2015-summary.csv")
+
 
   println("Take 3")
   println(fd2015.take(3))
